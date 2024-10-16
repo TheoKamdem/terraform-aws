@@ -1,33 +1,49 @@
-# Documentation Terraform - Provisionnement d'une Infrastructure AWS
+# Documentation Terraform - Provisioning an AWS Infrastructure
 
-Cette documentation explique ce que fait le code Terraform fourni, et décrit les étapes à suivre pour provisionner les ressources AWS. Le code crée un **Virtual Private Cloud (VPC)** et un **sous-réseau (subnet)** dans la région `eu-west-3` d'AWS (Paris).
+This documentation explains what the provided Terraform code does and outlines the steps to provision AWS resources. The code creates a **Virtual Private Cloud (VPC)** and a **subnet** in the `eu-west-3` AWS region (Paris).
 
-## Étapes pour provisionner les ressources
+## Steps to Provision Resources
 
-### 1. Installation de Terraform
+### 1. Install Terraform
+Before you begin, ensure Terraform is installed on your machine. If not, download and install Terraform from the official site: [terraform.io](https://www.terraform.io/downloads.html).
 
-Avant de commencer, assurez-vous que Terraform est installé sur votre machine. Si ce n'est pas le cas, téléchargez et installez Terraform depuis le site officiel : [terraform.io](https://www.terraform.io/downloads.html).
-
-### 2. Création du fichier de configuration Terraform
-
-Créez un fichier nommé `main.tf` et copiez-y le code suivant :
+### 2. Create the Terraform Configuration File
+Create a file named `main.tf` and paste the following code into it:
 
 ```hcl
-# Configuration du fournisseur AWS
+# AWS Provider Configuration
 provider "aws" {
   region     = "eu-west-3"
-  access_key = "XXX"      # Remplacez par votre clé d'accès AWS
-  secret_key = "XXXXX"     # Remplacez par votre clé secrète AWS
+  access_key = "XXX"      # Replace with your AWS access key, corresponding to an IAM user with Admin role
+  secret_key = "XXXXX"     # Replace with your AWS secret key
 }
 
-# Création d'un VPC
+# Create a VPC
 resource "aws_vpc" "dev-env-vpc" {
   cidr_block = "10.0.0.0/16"
 }
 
-# Création d'un sous-réseau dans le VPC
+# Create a Subnet in the VPC
 resource "aws_subnet" "dev-env-subnet-1" {
   vpc_id             = aws_vpc.dev-env-vpc.id
   cidr_block         = "10.0.10.0/24"
   availability_zone  = "eu-west-3a"
 }
+
+
+### 3. Initialize Terraform
+Initializes the necessary plugins for communication with the providers and sets up the backend:
+```hcl
+terraform init
+
+### 4. Plan the Execution 
+#### Shows the execution plan and the changes that will be applied to your infrastructure. Displays the resources that will be added, removed, or modified
+
+``` hcl
+ terraform  plan
+ ```
+### 5.  Apply the Plan to Provision the Resource
+ #### Applies the configurations you have declared in your different files, creates, deletes, or modifies the resources in your infrastructure:
+ ``` hcl
+ terraform apply
+  ```
